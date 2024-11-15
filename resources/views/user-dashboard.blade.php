@@ -10,6 +10,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <h1>Welcome to the user-dashboard, {{ $userId }}!</h1>
+                    
                 
                     <p>This page is under development...</p>
 

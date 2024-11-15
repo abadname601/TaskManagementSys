@@ -10,6 +10,6 @@ class HomeController extends Controller
 {
     public function index()
     {
-        return view('homepage'); // Create this view later in resources/views/home.blade.php
+        return view('homepage'); //  in resources/views/home.blade.php
     }
 }
