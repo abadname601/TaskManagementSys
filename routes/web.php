@@ -1,7 +1,9 @@
 <?php
+
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TasksController; 
 use Illuminate\Support\Facades\Route;
 
 // Homepage Route
@@ -24,8 +26,14 @@ Route::get('/user-dashboard/{userId}', [UserDashboardController::class, 'show'])
     ->middleware(['auth'])
     ->name('user-dashboard');
 
+// Tasks Routes
+Route::middleware('auth')->group(function () {
+    Route::get('/tasks', [TasksController::class, 'index'])->name('tasks.index');
+    Route::get('/tasks/create', [TasksController::class, 'create'])->name('tasks.create');
+    Route::post('/tasks/store', [TasksController::class, 'store'])->name('tasks.store');
+    Route::get('/tasks/edit/{id}', [TasksController::class, 'edit'])->name('tasks.edit');
+    Route::get('/tasks/delete/{id}', [TasksController::class, 'destroy'])->name('tasks.delete');
+    Route::get('/tasks/complete/{id}', [TasksController::class, 'complete'])->name('tasks.complete');
+});
+
 require __DIR__.'/auth.php';
-
-
-
-
