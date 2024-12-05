@@ -12,7 +12,7 @@ class TasksController extends Controller
         $tasks = [
             ['id' => 1, 'title' => 'Task 1', 'deadline' => '2024-12-05', 'category' => 'Work', 'completed' => false],
             ['id' => 2, 'title' => 'Task 2', 'deadline' => '2024-12-10', 'category' => 'School', 'completed' => false],
-            // Add more tasks as needed
+    
         ];
 
         // Separate completed tasks
@@ -39,7 +39,7 @@ class TasksController extends Controller
             'category' => 'required|string',
         ]);
 
-        // Simulate saving the task (you will replace this with actual DB save logic)
+        // Simulate saving the task 
         $task = [
             'id' => rand(1, 100), // Random id for example
             'title' => $request->title,
@@ -55,7 +55,7 @@ class TasksController extends Controller
     // Edit an existing task
     public function edit($id)
     {
-        // Simulate finding the task by its ID (replace with actual DB query)
+        // Simulate finding the task by its ID 
         $task = [
             'id' => $id,
             'title' => 'Task ' . $id,
@@ -76,7 +76,7 @@ class TasksController extends Controller
             'category' => 'required|string',
         ]);
 
-        // Simulate updating the task (replace with actual DB update logic)
+        // Simulate updating the task 
         $updatedTask = [
             'id' => $id,
             'title' => $request->title,
@@ -92,7 +92,7 @@ class TasksController extends Controller
     // Show confirmation before deleting a task
     public function confirmDelete($id)
     {
-        // Simulate finding the task by its ID (replace with actual DB query)
+        // Simulate finding the task by its ID 
         $task = [
             'id' => $id,
             'title' => 'Task ' . $id,
@@ -107,11 +107,6 @@ class TasksController extends Controller
     // Delete a task after confirmation
     public function destroy($id)
     {
-        // Implement task deletion logic here (e.g., delete from database)
-        
-        // For now, simulate deleting the task
-        // In a real application, you would delete the task from the database.
-        
         // Redirect back to task list
         return redirect()->route('tasks.index');
     }
