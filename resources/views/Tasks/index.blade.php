@@ -27,7 +27,7 @@
                             @endforeach
                         </ul>
                     @else
-                        <p>No tasks available. <a href="/tasks/create" class="text-blue-500 hover:underline">Create a new task</a></p>
+                        <p>No active tasks available.</p>
                     @endif
 
                     <!-- Completed Tasks -->
