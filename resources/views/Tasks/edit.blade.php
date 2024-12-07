@@ -53,16 +53,15 @@
                         <!-- Submit Button -->
                         <div class="flex justify-end space-x-2">
                             <button type="submit" class="px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600 transition duration-200"
-                                    style="display:block; margin: 10px auto;">Update Task</button>
+                                    style="margin: 10px;">Update Task</button>
 
                             <!-- Done Button (only shows if task is not completed) -->
                             @if (!$task->completed)
                                 <form method="POST" action="{{ route('tasks.complete', $task->id) }}" class="inline-block">
                                     @csrf
                                     @method('PATCH')
-                                    <button type="submit" class="px-4 py-2 rounded bg-green-500 text-white hover:bg-green-600 transition duration-200">
-                                        Mark as Done
-                                    </button>
+                                    <button type="submit" class="px-4 py-2 rounded bg-green-500 text-white hover:bg-green-600 transition duration-200"
+                                    style="margin: 10px;">Mark as Done</button>                                
                                 </form>
                             @endif
                         </div>
