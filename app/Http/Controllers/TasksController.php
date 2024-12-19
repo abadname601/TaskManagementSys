@@ -92,23 +92,26 @@ class TasksController extends Controller
 
         return redirect()->route('tasks.index');
     }
+
+    // Dashboard
     public function dashboard()
     {
-    $tasks = Task::all();
-    $totalTasks = $tasks->count();
-    $tasksDueToday = $tasks->where('deadline', now()->toDateString())->count();
-    $completedTasks = $tasks->where('completed', true)->count();
-    $overdueTasks = $tasks->where('deadline', '<', now()->toDateString())->where('completed', false)->count();
-
-    // Tasks by category
-    $tasksByCategory = Task::select('category', \DB::raw('count(*) as count'))
-        ->groupBy('category')
-        ->get();
-
-    $tasks = Task::select('title', 'deadline', 'completed')->get();
-
-    return view('dashboard', compact('tasks', 'totalTasks', 'tasksDueToday', 'completedTasks', 'overdueTasks', 'tasksByCategory'));
-}
-
-
+        // Fetch all tasks from the database
+        $tasks = Task::all();
+    
+        // Calculate task statistics
+        $totalTasks = $tasks->count();
+        $tasksDueToday = Task::whereDate('deadline', now()->toDateString())->where('completed', false)->count();
+        $completedTasks = $tasks->where('completed', true)->count();
+        $overdueTasks = Task::where('deadline', '<', now()->toDateString())->where('completed', false)->count();
+    
+        // Group tasks by category
+        $tasksByCategory = Task::select('category', \DB::raw('count(*) as count'))
+            ->groupBy('category')
+            ->get();
+    
+        // Return the view with calculated data
+        return view('dashboard', compact('tasks', 'totalTasks', 'tasksDueToday', 'completedTasks', 'overdueTasks', 'tasksByCategory'));
+    }
+    
 }
