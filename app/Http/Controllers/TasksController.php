@@ -92,4 +92,23 @@ class TasksController extends Controller
 
         return redirect()->route('tasks.index');
     }
+    public function dashboard()
+    {
+    $tasks = Task::all();
+    $totalTasks = $tasks->count();
+    $tasksDueToday = $tasks->where('deadline', now()->toDateString())->count();
+    $completedTasks = $tasks->where('completed', true)->count();
+    $overdueTasks = $tasks->where('deadline', '<', now()->toDateString())->where('completed', false)->count();
+
+    // Tasks by category
+    $tasksByCategory = Task::select('category', \DB::raw('count(*) as count'))
+        ->groupBy('category')
+        ->get();
+
+    $tasks = Task::select('title', 'deadline', 'completed')->get();
+
+    return view('dashboard', compact('tasks', 'totalTasks', 'tasksDueToday', 'completedTasks', 'overdueTasks', 'tasksByCategory'));
+}
+
+
 }

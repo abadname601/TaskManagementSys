@@ -1,7 +1,5 @@
 <?php
 
-// app/Models/Task.php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,5 +11,8 @@ class Task extends Model
 
     protected $fillable = ['title', 'deadline', 'category', 'completed'];
 
-    // Optional: You can add validation or relationships here if needed.
+    // Automatically cast 'deadline' to a Carbon instance
+    protected $casts = [
+        'deadline' => 'datetime',
+    ];
 }
