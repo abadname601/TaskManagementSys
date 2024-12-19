@@ -7,65 +7,109 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <!-- Calendar Section -->
-            <div class="mt-8 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <h3 class="text-lg font-semibold">Calendar</h3>
-                    <div id="calendar"></div> <!-- Calendar container -->
+                    {{ __("You're logged in!") }}
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Include FullCalendar JavaScript and CSS -->
-    @push('styles')
-        <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
-        
-        <!-- Custom Styles for Calendar -->
-        <style>
-            #calendar {
-                max-width: 100%;
-                margin: 0 auto;
-                padding: 10px;
-                background-color: rgb(182, 212, 243); /* Light background */
-                border-radius: 8px;
-                height: 600px; /* Set a fixed height */
-            }
-        </style>
-    @endpush
 
-    @push('scripts')
-        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js"></script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const calendarEl = document.getElementById('calendar');
-                const tasks = @json($tasks); // Pass tasks data to JavaScript
+   <!-- Task Summary and Task Categories Overview -->
+<div class="py-12">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="p-6 text-gray-900 grid grid-cols-2 gap-6">
                 
-                console.log('Tasks:', tasks); // Debugging - Ensure tasks are formatted correctly
+                <!-- Task Summary -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Task Summary</h3>
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="bg-blue-500 text-white p-4 rounded flex flex-col justify-between">
+                            <h3 class="font-bold">Total Tasks</h3>
+                            <p class="text-lg">{{ $totalTasks }}</p>
+                        </div>
+                        <div class="p-4 rounded flex flex-col justify-between" style="background-color: #FF8C00; color: #FFFFFF;">
+                            <h3 class="font-bold">Tasks Due Today</h3>
+                            <p class="text-lg">{{ $tasksDueToday }}</p>
+                        </div>
+                        <div class="bg-green-500 text-white p-4 rounded flex flex-col justify-between">
+                            <h3 class="font-bold">Completed Tasks</h3>
+                            <p class="text-lg">{{ $completedTasks }}</p>
+                        </div>
+                        <div class="bg-red-500 text-white p-4 rounded flex flex-col justify-between">
+                            <h3 class="font-bold">Overdue Tasks</h3>
+                            <p class="text-lg">{{ $overdueTasks }}</p>
+                        </div>
+                    </div>
+                </div>
 
-                // Format tasks as events for FullCalendar
-                const events = tasks.map(task => ({
-                    title: task.title,
-                    start: task.due_date, // Task due date as event start date
-                    color: 'blue' // Customize event color if needed
-                }));
+                <!-- Task Categories Overview -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Task Categories Overview</h3>
+                    <div style="width: 100%; height: 400px;">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-                // Initialize FullCalendar
-                const calendar = new FullCalendar.Calendar(calendarEl, {
-                    initialView: 'dayGridMonth', // Default view is monthly grid
-                    headerToolbar: {
-                        left: 'prev,next today',
-                        center: 'title',
-                        right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                    },
-                    events: events, // Pass events to FullCalendar
-                    eventClick: function (info) {
-                        alert('Task: ' + info.event.title); // Handle event clicks
-                    }
-                });
+<script>
+    const ctx = document.getElementById('categoryChart').getContext('2d');
+    const categoryChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: @json($tasksByCategory->pluck('category')),
+            datasets: [{
+                label: 'Tasks by Category',
+                data: @json($tasksByCategory->pluck('count')),
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false // Disables default aspect ratio to allow resizing
+        }
+    });
+</script>
 
-                calendar.render(); // Render the calendar
+
+    <!-- Calendar Overview -->
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    <h3 class="text-lg font-semibold mb-4">Calendar Overview</h3>
+                    <div id="calendar" style="width: 100%; height: 500px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+            
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,dayGridWeek,timeGridDay'
+                },
+                events: @json($tasks->map(function ($task) {
+                    return [
+                        'title' => $task->title,
+                        'start' => $task->deadline ? $task->deadline->toIso8601String() : null
+                    ];
+                })).filter(event => event.start !== null)
             });
-        </script>
-    @endpush
+
+            calendar.render();
+        });
+    </script>
+
 </x-app-layout>
