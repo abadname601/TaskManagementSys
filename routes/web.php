@@ -5,6 +5,7 @@ use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TasksController; 
 use Illuminate\Support\Facades\Route;
+use Carbon\Carbon;
 
 // Homepage Route
 Route::get('/', [HomeController::class, 'index']);
@@ -43,5 +44,8 @@ Route::put('/tasks/{id}', [TasksController::class, 'update'])->name('tasks.updat
 Route::patch('/tasks/complete/{id}', [TasksController::class, 'complete'])->name('tasks.complete');
 Route::resource('tasks', TasksController::class);
 
+Route::get('/test-timezone', function () {
+    return now()->toDateTimeString(); // This will show the current time based on the app's timezone
+});
 
 require __DIR__.'/auth.php';

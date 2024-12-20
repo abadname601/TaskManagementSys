@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class TasksController extends Controller
 {
@@ -27,13 +28,14 @@ class TasksController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'deadline' => 'nullable|date',
+            //'deadline' => 'nullable|date',
+            'deadline' => 'nullable|date_format:Y-m-d\TH:i',
             'category' => 'required|string',
         ]);
 
         Task::create([
             'title' => $request->title,
-            'deadline' => $request->deadline ?? 'No alert',
+            'deadline' => $request->deadline,
             'category' => $request->category,
             'completed' => false,
         ]);
@@ -53,14 +55,15 @@ class TasksController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'deadline' => 'nullable|date',
+           // 'deadline' => 'nullable|date',
+            'deadline' => 'nullable|date_format:Y-m-d\TH:i',
             'category' => 'required|string',
         ]);
 
         $task = Task::findOrFail($id);
         $task->update([
             'title' => $request->title,
-            'deadline' => $request->deadline ?? 'No alert',
+            'deadline' => $request->deadline,
             'category' => $request->category,
         ]);
 
@@ -95,23 +98,49 @@ class TasksController extends Controller
 
     // Dashboard
     public function dashboard()
-    {
-        // Fetch all tasks from the database
-        $tasks = Task::all();
+{
+    $tasks = Task::all(); // Fetch all tasks
+    $now = now(); // Current date and time
+
+    // Filter tasks due today
+    $tasksDueToday = $tasks->filter(function ($task) use ($now) {
+        if (!$task->deadline) {
+            return false; // Skip tasks without a deadline
+        }
+        $deadline = Carbon::parse($task->deadline);
+
+        // Debugging: Check task details
+        \Log::info("Task ID {$task->id}: Deadline {$task->deadline}, Now {$now}");
+
+        return $deadline->isToday() && $deadline->gte($now) && !$task->completed;
+    })->count();
+
+    // Filter overdue tasks
+    $overdueTasks = $tasks->filter(function ($task) use ($now) {
+        if (!$task->deadline) {
+            return false; // Skip tasks without a deadline
+        }
+        $deadline = Carbon::parse($task->deadline);
+
+        // Debugging: Check task details
+        \Log::info("Task ID {$task->id}: Deadline {$task->deadline}, Now {$now}");
+
+        return $deadline->lt($now) && !$task->completed;
+    })->count();
+
+    // Total tasks and completed tasks
+    $totalTasks = $tasks->count();
+    $completedTasks = $tasks->where('completed', true)->count();
+
+    // Tasks by category
+    $tasksByCategory = Task::select('category', \DB::raw('count(*) as count'))
+        ->groupBy('category')
+        ->get();
+
+    // Return the view with data
+    return view('dashboard', compact('tasks', 'totalTasks', 'tasksDueToday', 'completedTasks', 'overdueTasks', 'tasksByCategory'));
+}
+
     
-        // Calculate task statistics
-        $totalTasks = $tasks->count();
-        $tasksDueToday = Task::whereDate('deadline', now()->toDateString())->where('completed', false)->count();
-        $completedTasks = $tasks->where('completed', true)->count();
-        $overdueTasks = Task::where('deadline', '<', now()->toDateString())->where('completed', false)->count();
-    
-        // Group tasks by category
-        $tasksByCategory = Task::select('category', \DB::raw('count(*) as count'))
-            ->groupBy('category')
-            ->get();
-    
-        // Return the view with calculated data
-        return view('dashboard', compact('tasks', 'totalTasks', 'tasksDueToday', 'completedTasks', 'overdueTasks', 'tasksByCategory'));
-    }
     
 }

@@ -20,13 +20,16 @@
                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                    value="{{ old('title', $task->title) }}" required>
                         </div>
-
+                      
                         <!-- Deadline Field -->
-                        <div class="mb-4">
-                            <label for="deadline" class="block text-sm font-medium text-gray-700">Deadline</label>
-                            <input type="date" name="deadline" id="deadline" 
-                                   class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                   value="{{ old('deadline', $task->deadline) }}" required>
+                       <div class="mb-4">
+                             <label for="deadline" class="block text-sm font-medium text-gray-700">Deadline</label>
+                              <input type="datetime-local" name="deadline" id="deadline" 
+                              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                               value="{{ old('deadline', $task->deadline ? $task->deadline->format('Y-m-d\TH:i') : '') }}" required>
+                         @error('deadline')
+                          <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                         @enderror
                         </div>
 
                         <!-- Category Field -->
