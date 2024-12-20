@@ -10,11 +10,11 @@ use Carbon\Carbon;
 // Homepage Route
 Route::get('/', [HomeController::class, 'index']);
 
-// Dashboard Route
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
+// Dashboard Route
+//Route::get('/dashboard', function () {
+  //  return view('dashboard');
+//})->middleware(['auth', 'verified'])->name('dashboard'); 
 
 // Profile Routes
 Route::middleware('auth')->group(function () {

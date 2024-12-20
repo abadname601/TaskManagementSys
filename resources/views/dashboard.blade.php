@@ -6,11 +6,11 @@
         </h2>
     </x-slot>
 
-    <div class="py-6"> <!-- Reduced py-12 to py-6 for less space above and below the title card -->
+    <div class="py-6"> 
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 flex flex-col justify-center items-center text-center">
-                    <h1 class="text-gray-900 mb-2" style="font-size: 3.5rem; font-weight: 900;">TaskMaster</h1> <!-- Reduced margin bottom (mb-4 to mb-2) and adjusted font-size -->
+                    <h1 class="text-gray-900 mb-2" style="font-size: 3.5rem; font-weight: 900;">TaskMaster</h1> 
                     <p>{{ __("Let's turn your to-dos into accomplishments, one step at a time!") }}</p>
                 </div>
             </div>
@@ -18,7 +18,7 @@
     </div>
 
     <!-- Task Summary and Task Categories Overview -->
-    <div class="py-6"> <!-- Reduced py-12 to py-6 for less space above and below the task summary card -->
+    <div class="py-6"> 
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 grid grid-cols-2 gap-6">
@@ -72,14 +72,14 @@
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false // Disables default aspect ratio to allow resizing
+                maintainAspectRatio: false 
             }
         });
     </script>
 
 
     <!-- Calendar Overview -->
-    <div class="py-6"> <!-- Reduced py-12 to py-6 for less space above and below the calendar card -->
+    <div class="py-6"> 
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
