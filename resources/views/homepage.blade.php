@@ -1,3 +1,4 @@
+@section('title', 'TaskMaster')
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -15,7 +16,7 @@
                     You are logged in! Go to your 
                     <a href="{{ route('dashboard') }}" class="inline-block border border-blue-500 text-blue-700 font-semibold px-4 py-2 rounded hover:bg-blue-500 hover:text-white transition-colors duration-200">
                         Dashboard
-                    </a>.
+                    </a>
                 </p>
             @else
                 <p class="mt-6">

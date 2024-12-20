@@ -1,3 +1,4 @@
+@section('title', 'TaskMaster - My Tasks')
 <x-app-layout>
     <x-slot name="header">
         <h1 class="text-xl font-semibold text-gray-800">My Tasks</h1>
